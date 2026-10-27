@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — Auction Platform</title>
+</head>
+<body>
+
+    <h1>Вход в аккаунт</h1>
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(autocomplete="username") }}
+
+            {% for error in form.username.errors %}
+                <br><span>{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(autocomplete="current-password") }}
+
+            {% for error in form.password.errors %}
+                <br><span>{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        {{ form.submit() }}
+    </form>
+
+    <p>
+        Нет аккаунта?
+        <a href="{{ url_for('auth.register') }}">Зарегистрироваться</a>
+    </p>
+
+</body>
+</html>
