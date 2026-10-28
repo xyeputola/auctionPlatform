@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Auction Platform</title>
+</head>
+<body>
+    <h1>Добро пожаловать на Auction Platform!</h1>
+    {% if current_user.is_authenticated %}
+    <p>Вы вошли в аккаунт: {{ current_user.username }}</p>
+    <a href="{{ url_for('profile') }}">Личный кабинет</a>
+
+    <form action="{{ url_for('auth.logout') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Выйти из аккаунта</button>
+    </form>
+{% else %}
+    <p>Вы не авторизованы.</p>
+    <a href="{{ url_for('auth.login') }}">Войти</a>
+    <br>
+    <a href="{{ url_for('auth.register') }}">Зарегистрироваться</a>
+{% endif %}
+</body>
+</html>

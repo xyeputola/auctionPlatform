@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
 
-from flask import Flask
+from flask import Flask, render_template
+from flask.cli import with_appcontext
+import click
 from app.extensions import db, login_manager, migrate, csrf
+from flask_login import login_required, current_user
 
-from app.models import User
+from app.models import User, Auction, Category
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -30,9 +33,25 @@ def create_app():
 
     @app.route("/")
     def index():
-        return """
-        <h1>Welcome to Auction Auction Automation!</h1>
-        <p>flask work</p>
-    """
+        return render_template("index.html")
+
+    @app.route("/profile")
+    @login_required
+    def profile():
+        user_auction = Auction.query.filter_by(seller_id=current_user.id).all()
+        return render_template("profile.html", user=current_user)
+
+    @app.cli.command("seed-categories")
+    def seed_categories():
+        categories = ["Компьютеры","Телефоны","Аксессуары"]
+
+        for name in categories:
+            existing_category = Category.query.filter_by(name=name).first()
+            if not existing_category:
+                db.session.add(Category(name=name))
+
+            db.session.commit()
+            print("Категория добавлена")
+
 
     return app

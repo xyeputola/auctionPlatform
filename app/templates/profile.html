@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <h1>Личный кабинет</h1>
+
+    <h2>Информация о пользователе</h2>
+
+    <a href="{{ url_for('create_auction') }}">Выставить лот</a>
+
+    {% if auctions %}
+        {% for auction in auctions %}
+
+            <div>
+                <h3>{{ auction.title }}</h3>
+                <p>{{ auction.description }}</p>
+                <p>Начальная цена: {{ auction.starting_price }} сом</p>
+                <p>Текущая цена: {{ auction.current_price }} сом</p>
+                <p>Статус: {{ auction.status }}</p>
+            </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>У вас пока нет выставленных лотов.</p>
+{% endif %}
+
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Электронная почта: {{ user.email }}</p>
+
+    <p>Дата регистрации:
+        {{ user.created_at.strftime('%d.%m.%Y') if user.created_at else 'Не указана' }}
+    </p>
+
+    <a href="{{ url_for('index') }}">На главную</a>
+    <form action="{{ url_for('auth.logout') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Выйти из аккаунта</button>
+    </form>
+</body>
+</html>
